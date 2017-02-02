@@ -1,0 +1,16 @@
+---
+action_token: < redacted >
+admin:
+    admin_token: < redacted >
+    attempts: 1
+    auto_join_channels: ["#bot-testing"]
+    organization: "admin"
+    set_active: true
+post_message_action:
+    channel: "#bot-testing"
+    icon_emoji: ':unicorn_face:'
+    username: stackstormbot
+    webhook_url: https://hooks.slack.com/services/< redacted >
+sensor:
+    strip_formatting: false
+    token: < redacted >

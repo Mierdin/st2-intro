@@ -1,0 +1,36 @@
+
+version: '2.0'
+
+slack.post_tweet_if_not_stackstorm_bot:
+    description: >
+        Post message to slack, but not if posted by @stackstorm_bot
+    type: direct
+    input:
+        - twitter_handle
+        - created_at
+        - tweet_text
+        - tweet_url
+    tasks:
+        t1:
+
+            action: core.local
+            input:
+                cmd: "echo 'Incoming tweet by <% $.twitter_handle %>'"
+            publish:
+                path: <% task(t1).result.stdout %>
+
+            on-success:
+                - post_tweet: <% $.twitter_handle != 'stackstorm_bot' %>
+                - do_not_post_tweet: <% $.twitter_handle = 'stackstorm_bot' %>
+
+        post_tweet:
+            action: "slack.post_message"
+            input:
+                message: "@<% $.twitter_handle %> tweeted on <% $.created_at %>: <% $.tweet_text %> - <% $.tweet_url %>"
+                channel: "#twitter-relay"
+
+        do_not_post_tweet:
+            action: ansible.playbook
+            input:
+                connection: local
+                playbook: /home/vagrant/st2-intro/ansible/hello_from_ansible.yaml

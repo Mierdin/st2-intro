@@ -1,0 +1,12 @@
+---
+- name: Display fortune
+  hosts: localhost
+  connection: local
+  tasks:
+
+    - name: In lieu of a slack post, have a fortune instead!
+      shell: "/usr/games/fortune"
+      register: fortune_result
+
+    - debug:
+        msg: "{{ fortune_result.stdout }}"

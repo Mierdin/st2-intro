@@ -1,0 +1,43 @@
+
+version: '2.0'
+
+slack.mistral-branching:
+    description: >
+        A sample workflow that demonstrates how to use conditions
+        to determine which path in the workflow to take.
+    type: direct
+    input:
+        - which
+    tasks:
+        t1:
+
+            # Print the option that was passed as input so we can see it and debug it
+            action: core.local
+            input:
+
+                # Uses input to the workflow to form the input to this specific action
+                cmd: "printf <% $.which %>"
+
+            # publishes results from a task as variables
+            # that can be consumed in other tasks.
+            publish:
+                path: <% task(t1).result.stdout %>
+
+            # This is where the decision is made. If successful,
+            # one of these three options are chosen based on input.
+            on-success:
+                - a: <% $.path = 'a' %>
+                - b: <% $.path = 'b' %>
+                - c: <% not $.path in list(a, b) %>
+        a:
+            action: core.local
+            input:
+                cmd: "echo 'Took path A.'"
+        b:
+            action: core.local
+            input:
+                cmd: "echo 'Took path B.'"
+        c:
+            action: core.local
+            input:
+                cmd: "echo 'Took path C.'"

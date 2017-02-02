@@ -1,0 +1,20 @@
+---
+description: Post message to slack, but not if posted by @stackstorm_bot
+enabled: true
+entry_point: "/opt/stackstorm/packs/slack/workflows/post_tweet_if_not_stackstorm_bot.yaml"
+name: post_tweet_if_not_stackstorm_bot
+pack: slack
+parameters:
+  twitter_handle:
+    required: true
+    type: string
+  created_at:
+    required: true
+    type: string
+  tweet_text:
+    required: true
+    type: string
+  tweet_url:
+    required: true
+    type: string
+runner_type: mistral-v2
